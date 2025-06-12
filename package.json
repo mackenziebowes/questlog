@@ -1,0 +1,18 @@
+{
+	"name": "deko",
+	"module": "index.ts",
+	"type": "module",
+	"private": true,
+	"devDependencies": {
+		"@types/bun": "latest"
+	},
+	"bin": {
+		"deko": "./index.ts"
+	},
+	"peerDependencies": {
+		"typescript": "^5"
+	},
+	"dependencies": {
+		"@clack/prompts": "^0.11.0"
+	}
+}
