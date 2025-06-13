@@ -179,31 +179,31 @@ You can use this example as a template for your model:
 
 [[ticket]]
 id = 1
-title = "CLI scaffold & questlog init"
+name = "CLI scaffold & questlog init"
 description = "Bun + Clack setup, env checks, baseline command tree"
 points = 2
 
 [[ticket]]
 id = 2
-title = "load command"
+name = "load command"
 description = "Parse quest.toml/json, create .queststate.json, start timer"
 points = 3
 
 [[ticket]]
 id = 3
-title = "done command"
+name = "done command"
 description = "Mark current task complete, auto-advance next, timestamp"
 points = 3
 
 [[ticket]]
 id = 4
-title = "stats command"
+name = "stats command"
 description = "Show % complete, avg task duration, total elapsed time"
 points = 2
 
 [[ticket]]
 id = 5
-title = "Repo-root discovery"
+name = "Repo-root discovery"
 description = "Walk up dirs to find quest file (Git-style)"
 points = 2
 
@@ -215,7 +215,7 @@ points = 2
 
 [[ticket]]
 id = 6
-title = "TOML schema + Zod validation"
+name = "TOML schema + Zod validation"
 description = "Prevent corrupt logs, enable future versioning"
 points = 2
 
@@ -227,13 +227,13 @@ points = 2
 
 [[ticket]]
 id = 7
-title = "Auto-commit on task start/finish"
+name = "Auto-commit on task start/finish"
 description = "git init if missing, update .gitignore, semantic commit msgs"
 points = 3
 
 [[ticket]]
 id = 8
-title = "--no-git flag + dirty-repo warning"
+name = "--no-git flag + dirty-repo warning"
 description = "Respect existing workflows; allow disabling Git hooks"
 points = 2
 
@@ -245,49 +245,49 @@ points = 2
 
 [[ticket]]
 id = 9
-title = "ASCII confetti / sound on done"
+name = "ASCII confetti / sound on done"
 description = "Instant dopamine hit on task completion"
 points = 1
 
 [[ticket]]
 id = 10
-title = "Dormant status"
+name = "Dormant status"
 description = "Auto-mark tasks stuck >72 h as dormant"
 points = 2
 
 [[ticket]]
 id = 11
-title = "Back-fill start time"
+name = "Back-fill start time"
 description = "Gracefully handle forgotten load command"
 points = 2
 
 [[ticket]]
 id = 12
-title = "bookmark command"
+name = "bookmark command"
 description = "Stash open files / branch; reopen on reload"
 points = 3
 
 [[ticket]]
 id = 13
-title = "refactor command"
+name = "refactor command"
 description = "Split / merge tasks mid-quest without losing history"
 points = 3
 
 [[ticket]]
 id = 14
-title = "Arousal-level tags"
+name = "Arousal-level tags"
 description = "🟢🟡🔴 tags + filter in stats"
 points = 2
 
 [[ticket]]
 id = 15
-title = "Daily rename prompt"
+name = "Daily rename prompt"
 description = "End-of-day narrative reframing for active quest"
 points = 2
 
 [[ticket]]
 id = 16
-title = "Variable-ratio Easter eggs"
+name = "Variable-ratio Easter eggs"
 description = "Random loot drops every N completions"
 points = 2
 
@@ -299,7 +299,7 @@ points = 2
 
 [[ticket]]
 id = 17
-title = "Extended stats"
+name = "Extended stats"
 description = "Per-day burndown, task histogram, deeper insights"
 points = 3
 
@@ -311,13 +311,13 @@ points = 3
 
 [[ticket]]
 id = 18
-title = "Cloud sync"
+name = "Cloud sync"
 description = "Local file → simple REST backend for multi-device + backups"
 points = 8
 
 [[ticket]]
 id = 19
-title = "Leaderboards / dashboards"
+name = "Leaderboards / dashboards"
 description = "Public speedruns, team boards, community gamification"
 points = 8
 
@@ -329,7 +329,7 @@ points = 8
 
 [[ticket]]
 id = 20
-title = "Raycast / Tauri mini-window"
+name = "Raycast / Tauri mini-window"
 description = "1-click done; reduce context-switch friction"
 points = 5
 
@@ -341,13 +341,13 @@ points = 5
 
 [[ticket]]
 id = 21
-title = "Unit tests & CI"
+name = "Unit tests & CI"
 description = "bun test + GitHub Actions for regression safety"
 points = 2
 
 [[ticket]]
 id = 22
-title = "Publish to npm + semantic-release"
+name = "Publish to npm + semantic-release"
 description = "npx questlog global install, automated versioning"
 points = 2
 ```

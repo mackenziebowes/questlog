@@ -11,19 +11,19 @@ Let's take a look at an example, first:
 ```toml
 [[ticket]]
 id          = 1
-title       = "CLI scaffold & questlog init"
+name       = "CLI scaffold & questlog init"
 description = "Bun + Clack setup, env checks, baseline command tree"
 points      = 2
 
 [[ticket]]
 id          = 2
-title       = "load command"
+name       = "load command"
 description = "Parse quest.toml/json, create .queststate.json, start timer"
 points      = 3
 
 [[ticket]]
 id          = 3
-title       = "done command"
+name       = "done command"
 description = "Mark current task complete, auto-advance next, timestamp"
 points      = 3
 ```
@@ -32,7 +32,7 @@ Your questline **must have _exactly_** these parameters:
 
 - `heading` is exactly `[[ticket]]` (will be string split)
 - `id` is number (and unique, they are loaded into a Map)
-- `title` is string
+- `name` is string
 - `description` is string
 - `points` is number
 
