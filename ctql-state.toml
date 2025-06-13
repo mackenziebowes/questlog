@@ -4,5 +4,7 @@
 
 autogit = true
 FormattedQuests = true
-currentQuestId = 1
+currentQuestId = 2
 numQuests = 22
+timeElapsed = 420194
+numQuestsFinished = 1

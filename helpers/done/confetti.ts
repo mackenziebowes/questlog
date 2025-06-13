@@ -5,6 +5,7 @@ interface ConfettiArgs {
 	width?: number;
 	height?: number;
 	messages: string[];
+	progressMsg?: string;
 }
 // duration = 2000, width = 32, height = 8
 export async function confetti(args: ConfettiArgs) {
@@ -29,8 +30,11 @@ export async function confetti(args: ConfettiArgs) {
 
 		// Add messages below the frame
 		const messageIndex =
-			Math.floor((Date.now() - start) / 250) % args.messages.length;
+			Math.floor((Date.now() - start) / 500) % args.messages.length;
 		frame += args.messages[messageIndex] + "\n";
+		if (args.progressMsg) {
+			frame += `${args.progressMsg}\n`;
+		}
 
 		return frame;
 	};

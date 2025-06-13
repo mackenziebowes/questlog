@@ -68,12 +68,11 @@ export async function FinishQuest(): Promise<HelperResponse> {
 			if (pointsMsg.length > 0) {
 				preparedMessages.push(pointsMsg);
 			}
-			if (progressMsg.length > 0) {
-				preparedMessages.push(progressMsg);
-			}
+
 			await confetti({
 				duration: 2000,
 				messages: preparedMessages,
+				progressMsg: progressMsg.length > 0 ? progressMsg : undefined,
 			});
 			const nextResponse = await NextQuest(currentQuestId);
 			if (!nextResponse.ok) {
@@ -89,9 +88,6 @@ export async function FinishQuest(): Promise<HelperResponse> {
 				`✨ [Complete]: ${currentQuest.name}`,
 				`🏰 All Quests Complete!`,
 			];
-			if (progressMsg.length > 0) {
-				preparedMessages.push(progressMsg);
-			}
 			if (!timeMsg.includes("⚠️")) {
 				preparedMessages.push(timeMsg);
 			}
@@ -106,6 +102,7 @@ export async function FinishQuest(): Promise<HelperResponse> {
 			await confetti({
 				duration: 5000,
 				messages: preparedMessages,
+				progressMsg: progressMsg.length > 0 ? progressMsg : undefined,
 			});
 			return {
 				ok: true,
