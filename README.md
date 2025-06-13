@@ -1,4 +1,4 @@
-# Questlog – A Skyrim-Style Quest Tracker for Real Life
+# Questlog – An RPG-Style Quest Tracker for Solo Devs
 
 **Questlog** turns your daily tasks into structured, time-tracked quests — helping you see exactly where your time goes, one mission at a time.
 
