@@ -1,6 +1,6 @@
-# Questlog – An RPG-Style Quest Tracker for Solo Devs
+# CTQL: Clock Time Quest Log – An RPG-Style Quest Tracker for Solo Devs
 
-**Questlog** turns your daily tasks into structured, time-tracked quests — helping you see exactly where your time goes, one mission at a time.
+**ctql** turns your daily tasks into structured, time-tracked quests — helping you see exactly where your time goes, one mission at a time.
 
 _Track progress. Slay distractions. Win back your day._
 
@@ -8,7 +8,7 @@ _Track progress. Slay distractions. Win back your day._
 
 ## What It Does
 
-Questlog is a local-first CLI that helps you:
+ctql is a local-first CLI that helps you:
 
 - Load a **Quest Line** (project or objective)
 - Track each **task’s real-world time cost**
@@ -21,13 +21,13 @@ Questlog is a local-first CLI that helps you:
 
 ## How It Works
 
-- `questlog load quest.toml`  
+- `ctql load quest.toml`  
   Load a structured task list. Clock starts immediately.
 
-- `questlog done`  
+- `ctql done`  
   Marks the current task complete and starts the next one automatically.
 
-- `questlog stats`  
+- `ctql stats`  
   Shows progress, % complete, average task duration, and total elapsed time.
 
 Each task logs:
@@ -49,8 +49,8 @@ See Guides/Generating Quests
 - 📜 Simple, readable data format (TOML or JSON)
 - 🕰 Tracks _calendar time_ — not just work hours
 - 📊 Built-in stats for self-awareness and reflection
-- 📁 Scoped to project folders (one questlog per repo)
-- 🧠 Zero-config — just drop in a `.questlog.toml` and go
+- 📁 Scoped to project folders (one quest line per repo)
+- 🧠 Zero-config — just drop in a (formatted) `.quest.toml` and go
 
 ---
 
@@ -80,5 +80,5 @@ See Guides/Generating Quests
 
 ---
 
-> Questlog doesn’t just help you finish projects.  
+> ctql doesn’t just help you finish projects.  
 > It helps you **face the clock** — and start winning again.

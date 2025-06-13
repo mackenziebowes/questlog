@@ -1,13 +1,26 @@
 {
-	"name": "deko",
-	"module": "index.ts",
+	"name": "ctql",
+	"version": "0.0.1",
+	"description": "Clock Time Quest Log: RPG-style quest tracker for Solo Devs",
 	"type": "module",
-	"private": true,
+	"module": "index.ts",
+	"bin": {
+		"ctql": "index.ts"
+	},
+	"keywords": [
+		"cli",
+		"productivity",
+		"questlog",
+		"adhd",
+		"task-tracker"
+	],
+	"author": "Mackenzie Bowes <mackenzie@mackenziebowes.com>",
+	"license": "MIT",
+	"scripts": {
+		"start": "bun index.ts"
+	},
 	"devDependencies": {
 		"@types/bun": "latest"
-	},
-	"bin": {
-		"deko": "./index.ts"
 	},
 	"peerDependencies": {
 		"typescript": "^5"
