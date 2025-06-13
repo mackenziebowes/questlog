@@ -1,15 +1,23 @@
 #!/usr/bin/env bun
 
 import * as p from "@clack/prompts";
-import { gitGuard } from "./helpers/git_guard";
-import { loadQuest } from "./helpers/load_quest";
-import start from "./helpers/startBranch";
+import quest from "./helpers/quest_handling";
+import { state, loadState, saveState, StateOptions } from "./helpers/state";
+import git from "./helpers/git";
+import start from "./helpers/start";
+import done from "./helpers/done";
+import { displayStats } from "./helpers/stats";
 
 async function main() {
-	p.intro("⚔️ Quest Log 🏰");
-	const action = await p.group(
+	p.intro("⚔️  Quest Log 🏰");
+	const loadStateRes = loadState();
+	if (!loadStateRes.ok) {
+		p.cancel(loadStateRes.err);
+		process.exit(0);
+	}
+	const { action } = await p.group(
 		{
-			action: ({ results }) =>
+			action: () =>
 				p.select({
 					options: [
 						{
@@ -27,6 +35,11 @@ async function main() {
 							label: "See Stats",
 							hint: "Needs an in-progress questline",
 						},
+						{
+							value: "manage_git",
+							label: "Manage Git",
+							hint: "Manage your git settings",
+						},
 					],
 					message: "What would you like to do?",
 				}),
@@ -38,13 +51,13 @@ async function main() {
 			},
 		}
 	);
-
 	// -- Start Branch ----------
 	if (action == "start") {
-		const autogit = await p.group(
+		p.log.step("🧙‍♂️ Starting your quest line...");
+		const { autogit } = await p.group(
 			{
-				autogit: ({ results }) =>
-					p.confirm({ message: "Sync progress with git?" }),
+				autogit: () =>
+					p.confirm({ message: "🤔 Auto-sync progress with git?" }),
 			},
 			{
 				onCancel: () => {
@@ -53,36 +66,106 @@ async function main() {
 				},
 			}
 		);
-
-		const loadQuestRes = loadQuest();
+		// -- Save git toggle for future ----
+		state.set(StateOptions.AutoGit, autogit);
+		saveState();
+		p.log.step("Loading...");
+		const loadQuestRes = quest.load();
 		if (!loadQuestRes.ok) {
 			p.cancel(loadQuestRes.err);
 			process.exit(0);
 		}
-
+		const quests = loadQuestRes.data;
 		if (autogit) {
-			const gitGuardRes = gitGuard();
+			p.log.step("Configuring git...");
+			const gitGuardRes = git.guard();
 			if (!gitGuardRes.ok) {
 				p.cancel(gitGuardRes.err);
 				process.exit(0);
 			}
-			const gitInitRes = await start.initGit();
+			const gitInitRes = await git.init();
 			if (!gitInitRes.ok) {
 				p.cancel(gitInitRes.err);
 				process.exit(0);
 			}
 		}
+		p.log.step("Taking first step...");
+		const startQuestRes = start.quest(quests);
+		if (!startQuestRes.ok) {
+			p.cancel(startQuestRes.err);
+			process.exit(0);
+		}
+		p.log.success(startQuestRes.data.msg);
+		if (autogit) {
+			const gitCheckoutRes = await git.checkout(startQuestRes.data.questName);
+			if (!gitCheckoutRes.ok) {
+				p.cancel(gitCheckoutRes.err);
+				process.exit(0);
+			}
+			p.log.success(gitCheckoutRes.data.msg);
+		}
+		// -- Quietly Save Data ---------------
+		quest.save();
+		saveState();
+		p.outro("🦅 Safe Travels! 🏕️");
 	}
 
 	// -- Done Branch ----------
 	if (action == "done") {
+		quest.load();
+		const finishResponse = await done.finish();
+		if (!finishResponse.ok) {
+			p.cancel(finishResponse.err);
+			process.exit(0);
+		}
+		p.log.success(finishResponse.data);
+		quest.save();
+		saveState();
+		p.outro("🦅 Ever Onwards! 🏕️");
 	}
 
 	// -- Stats Branch -----------
 	if (action == "stats") {
+		quest.load();
+		const statsRes = displayStats();
+		if (statsRes.ok) {
+			p.log.info(statsRes.data);
+		} else {
+			p.log.warn(statsRes.data);
+		}
+		p.outro("🦅 Keep Going! 🏕️");
 	}
 
-	p.outro("🦅 Safe Travels! 🏕️");
+	if (action == "manage_git") {
+		const gitGuardRes = git.guard();
+		if (!gitGuardRes.ok) {
+			p.cancel(gitGuardRes.err);
+			process.exit(0);
+		}
+		const { autogit } = await p.group(
+			{
+				autogit: () =>
+					p.confirm({ message: "🤔 Auto-sync progress with git?" }),
+			},
+			{
+				onCancel: () => {
+					p.cancel("Operation cancelled.");
+					process.exit(0);
+				},
+			}
+		);
+		// -- Save git toggle for future ----
+		state.set(StateOptions.AutoGit, autogit);
+		if (autogit) {
+			const gitInitRes = await git.init();
+			if (!gitInitRes.ok) {
+				p.cancel(gitInitRes.err);
+				process.exit(0);
+			}
+		}
+		saveState();
+		p.outro("🦅 Git Updated! 🏕️");
+	}
 }
 
 main();

@@ -1,3 +1,5 @@
+import type { TomlPrimitive } from "smol-toml";
+
 type HelperSuccess = {
 	ok: true;
 	data: any;
@@ -18,9 +20,9 @@ export type DeclaredQuest = {
 };
 
 export enum QuestStepStatus {
-	PENDING,
-	STARTED,
-	FINISHED,
+	PENDING = "pending",
+	STARTED = "started",
+	FINISHED = "finished",
 }
 
 export type LoadedQuest = DeclaredQuest & {
@@ -28,3 +30,9 @@ export type LoadedQuest = DeclaredQuest & {
 	timeFinished?: Date;
 	status: QuestStepStatus;
 };
+
+export type LoadedQuests = Map<number, LoadedQuest>;
+
+export type Primitive = string | Date | boolean | string[] | Date[] | boolean[];
+
+export type CTQLState = Map<string, Primitive | TomlPrimitive>;
