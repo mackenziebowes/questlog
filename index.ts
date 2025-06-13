@@ -167,4 +167,41 @@ async function main() {
 	}
 }
 
-main();
+const subcommand = Bun.argv[2];
+
+if (!subcommand) {
+	main();
+} else {
+	const loadStateRes = loadState();
+	if (!loadStateRes.ok) {
+		p.cancel(loadStateRes.err);
+		process.exit(0);
+	}
+	switch (subcommand) {
+		case "done":
+			p.intro("⚔️  Quest Log - Step Complete 🏰");
+			quest.load();
+			const finishResponse = await done.finish();
+			if (!finishResponse.ok) {
+				p.cancel(finishResponse.err);
+				process.exit(0);
+			}
+			quest.save();
+			saveState();
+			p.outro("🦅 Ever Onwards! 🏕️");
+			break;
+		case "stats":
+			p.intro("⚔️  Quest Log - Stats 🏰");
+			quest.load();
+			const statsRes = displayStats();
+			if (statsRes.ok) {
+				p.log.info(statsRes.data);
+			} else {
+				p.log.warn(statsRes.data);
+			}
+			p.outro("🦅 Keep Going! 🏕️");
+			break;
+		default:
+			break;
+	}
+}
