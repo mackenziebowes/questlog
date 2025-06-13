@@ -22,7 +22,7 @@ export async function gitCheckout(questName: string): Promise<HelperResponse> {
 			}
 		}
 	}
-	await Bun.$`git checkout ${qn}`;
+	await Bun.$`git checkout -b ${qn}`;
 	return {
 		ok: true,
 		data: {
