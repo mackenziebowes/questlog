@@ -1,78 +1,88 @@
 #!/usr/bin/env bun
 
 import * as p from "@clack/prompts";
-import { execSync } from "child_process";
+import { gitGuard } from "./helpers/git_guard";
+import { loadQuest } from "./helpers/load_quest";
+import start from "./helpers/startBranch";
 
 async function main() {
-	p.intro("Running Deko");
-	const group = await p.group(
+	p.intro("⚔️ Quest Log 🏰");
+	const action = await p.group(
 		{
-			name: () => p.text({ message: "What is your project called?" }),
-			install: ({ results }) =>
-				p.confirm({ message: "Auto-install dependencies? " }),
+			action: ({ results }) =>
+				p.select({
+					options: [
+						{
+							value: "start",
+							label: "Start a Quest Line",
+							hint: "Needs a ./quest.toml nearby",
+						},
+						{
+							value: "done",
+							label: "Progress a Quest Line",
+							hint: "Needs an in-progress questline",
+						},
+						{
+							value: "stats",
+							label: "See Stats",
+							hint: "Needs an in-progress questline",
+						},
+					],
+					message: "What would you like to do?",
+				}),
 		},
 		{
-			onCancel: ({ results }) => {
+			onCancel: () => {
 				p.cancel("Operation cancelled.");
 				process.exit(0);
 			},
 		}
 	);
 
-	if (group.name) {
-		if (group.name.includes(" ")) {
-			group.name = group.name.replaceAll(" ", "-");
+	// -- Start Branch ----------
+	if (action == "start") {
+		const autogit = await p.group(
+			{
+				autogit: ({ results }) =>
+					p.confirm({ message: "Sync progress with git?" }),
+			},
+			{
+				onCancel: () => {
+					p.cancel("Operation cancelled.");
+					process.exit(0);
+				},
+			}
+		);
+
+		const loadQuestRes = loadQuest();
+		if (!loadQuestRes.ok) {
+			p.cancel(loadQuestRes.err);
+			process.exit(0);
+		}
+
+		if (autogit) {
+			const gitGuardRes = gitGuard();
+			if (!gitGuardRes.ok) {
+				p.cancel(gitGuardRes.err);
+				process.exit(0);
+			}
+			const gitInitRes = await start.initGit();
+			if (!gitInitRes.ok) {
+				p.cancel(gitInitRes.err);
+				process.exit(0);
+			}
 		}
 	}
 
-	try {
-		execSync("git --version", { stdio: "ignore" });
-	} catch {
-		p.cancel("Git is not installed. Please install Git to proceed.");
-		process.exit(1);
+	// -- Done Branch ----------
+	if (action == "done") {
 	}
 
-	const clonePrisma = p.tasks([
-		{
-			title: "Cloning Prisma...",
-			task: async (message) => {
-				await Bun.$`git clone https://github.com/mackenziebowes/deko-orm-prisma.git ./${group.name}/prisma`;
-				if (group.install) {
-					await Bun.$`bun i`.cwd(`./${group.name}/prisma`);
-				}
-				return "Cloned Prisma";
-			},
-		},
-	]);
+	// -- Stats Branch -----------
+	if (action == "stats") {
+	}
 
-	const cloneSolid = p.tasks([
-		{
-			title: "Cloning Solid...",
-			task: async (message) => {
-				await Bun.$`git clone https://github.com/mackenziebowes/deko-client-solid.git ./${group.name}/client`;
-				if (group.install) {
-					await Bun.$`bun i`.cwd(`./${group.name}/client`);
-				}
-				return "Cloned Solid";
-			},
-		},
-	]);
-
-	const cloneHono = p.tasks([
-		{
-			title: "Cloning Hono...",
-			task: async (message) => {
-				await Bun.$`git clone https://github.com/mackenziebowes/deko-server-hono.git ./${group.name}/server`;
-				if (group.install) {
-					await Bun.$`bun i`.cwd(`./${group.name}/server`);
-				}
-				return "Cloned Hono";
-			},
-		},
-	]);
-
-	await Promise.all([clonePrisma, cloneSolid, cloneHono]);
-	p.outro("Deko Complete");
+	p.outro("🦅 Safe Travels! 🏕️");
 }
 
 main();

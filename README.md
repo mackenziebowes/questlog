@@ -1,58 +1,84 @@
-# Deko – Full-Stack Starter Kit
+# Questlog – A Skyrim-Style Quest Tracker for Real Life
 
-> **Deko** is a modular, Bun-native project scaffold that bootstraps your full-stack app with SolidJS (client), Hono (server), and Prisma (ORM).
-> Built for speed, composability, and local-first hacking.
+**Questlog** turns your daily tasks into structured, time-tracked quests — helping you see exactly where your time goes, one mission at a time.
 
-## Current Stack
+_Track progress. Slay distractions. Win back your day._
 
-I have tried out a few different frameworks, here's my take on the current best-of-the-best:
+---
 
-| Module | Tech Stack                              | Repo                                                                     |
-| ------ | --------------------------------------- | ------------------------------------------------------------------------ |
-| Client | SolidStart, Typescript, Tailwind, Axios | [deko-client-solid](https://github.com/mackenziebowes/deko-client-solid) |
-| Server | Hono, Typescript, Jose, Zod             | [deko-server-hono](https://github.com/mackenziebowes/deko-server-hono)   |
-| ORM    | Prisma                                  | [deko-orm-prisma](https://github.com/mackenziebowes/deko-orm-prisma)     |
+## What It Does
 
-## Quickstart
+Questlog is a local-first CLI that helps you:
 
-Download the repo with:
+- Load a **Quest Line** (project or objective)
+- Track each **task’s real-world time cost**
+- Auto-advance to the next step when you're done
+- Get clear stats on your pace, completion rate, and total life-hours spent
 
-```bash
-git clone https://github.com/mackenziebowes/deko-cli.git
-```
+> "It took me 6.3 calendar days to finish this project. Am I okay with that?"
 
-Install dependencies:
+---
 
-```bash
-bun i
-```
+## How It Works
 
-Link package:
+- `questlog load quest.toml`  
+  Load a structured task list. Clock starts immediately.
 
-```bash
-bun link
-```
+- `questlog done`  
+  Marks the current task complete and starts the next one automatically.
 
-## Usage
+- `questlog stats`  
+  Shows progress, % complete, average task duration, and total elapsed time.
 
-Deko creates a new directory for you and optionally installs dependencies.
+Each task logs:
 
-```bash
-cd ~/parent-to-intended-folder/
+- `timeStarted`
+- `timeFinished`
+- Status (`todo`, `in_progress`, `complete`, `dormant`)
 
-deko
-```
+---
 
-- Prompts for a project name (e.g. my-app)
-- Clones three modules into
+## Where Do I Get Quests?
 
-```
-my-app/
-├── client/     → SolidJS frontend
-├── server/     → Hono API backend
-└── prisma/     → ORM, schema & migration logic
-```
+See Guides/Generating Quests
 
-- Optionally runs `bun install` in each directory
+---
 
-## Have fun, happy hacking
+## Features
+
+- 📜 Simple, readable data format (TOML or JSON)
+- 🕰 Tracks _calendar time_ — not just work hours
+- 📊 Built-in stats for self-awareness and reflection
+- 📁 Scoped to project folders (one questlog per repo)
+- 🧠 Zero-config — just drop in a `.questlog.toml` and go
+
+---
+
+## Why It Helps
+
+- Beat **time blindness** with hard timestamps
+- Tame **task overload** with one active quest at a time
+- Combat **avoidance loops** by seeing your wins
+- Reflect honestly: "How long do things _really_ take me?"
+
+---
+
+## Tech Stack
+
+- **Runtime**: Bun
+- **CLI Framework**: Clack
+- **Data Format**: TOML + JSON
+- **Local-First**: No login, no servers, no tracking
+
+---
+
+## Roadmap
+
+- ASCII confetti + loot drops on task completion
+- Mid-quest `refactor` to split/merge tasks without losing history
+- Optional sync + public speedrun leaderboards for teams
+
+---
+
+> Questlog doesn’t just help you finish projects.  
+> It helps you **face the clock** — and start winning again.
