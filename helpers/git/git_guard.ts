@@ -1,4 +1,4 @@
-import type { HelperResponse } from "./types";
+import type { HelperResponse } from "../types";
 import { execSync } from "node:child_process";
 
 export function gitGuard(): HelperResponse {

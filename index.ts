@@ -118,7 +118,6 @@ async function main() {
 			p.cancel(finishResponse.err);
 			process.exit(0);
 		}
-		p.log.success(finishResponse.data);
 		quest.save();
 		saveState();
 		p.outro("🦅 Ever Onwards! 🏕️");
