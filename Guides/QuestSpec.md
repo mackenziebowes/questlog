@@ -11,19 +11,19 @@ Let's take a look at an example, first:
 ```toml
 [[ticket]]
 id          = 1
-name       = "CLI scaffold & questlog init"
+name        = "CLI scaffold & questlog init"
 description = "Bun + Clack setup, env checks, baseline command tree"
 points      = 2
 
 [[ticket]]
 id          = 2
-name       = "load command"
+name        = "load command"
 description = "Parse quest.toml/json, create .queststate.json, start timer"
 points      = 3
 
 [[ticket]]
 id          = 3
-name       = "done command"
+name        = "done command"
 description = "Mark current task complete, auto-advance next, timestamp"
 points      = 3
 ```
@@ -39,7 +39,6 @@ Your questline **must have _exactly_** these parameters:
 ## Point Expectations
 
 These are softer, but it improves QoL.
-
 I assume you are a solo dev, so I use this rubric for points:
 
 ```md
@@ -53,6 +52,11 @@ I assume you are a solo dev, so I use this rubric for points:
 | 13+ points | Multiple days, high risk/unknowns             | A/B infra, analytics with time series  |
 ```
 
+These estimates come from an LLM, which is trained on data from before LLMs mostly!
+They're a little pessimistic.
+
+> One of the cutest things that LLMs do is estimate some feature will take 2 weeks as if I'm not about to force Claude Code to do it in the next 20 minutes.
+
 The CLI will look at your ticket's estimated points and convert that into a time-box.
-Use this rubric so the CLI's actions make sense - IE, giving something 25 points and getting it done in an hour should make you reflect on your estimation skills,
-but the CLI will simply congratulate you. Hollow victory, wouldn't you say?
+Use this rubric so the CLI's actions make sense - IE, giving something 25 points and getting it done in an hour should make you reflect on **your estimation skills**,
+but the CLI will simply congratulate you. **Hollow victory,** wouldn't you say?

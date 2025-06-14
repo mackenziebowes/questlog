@@ -201,6 +201,37 @@ if (!subcommand) {
 			}
 			p.outro("🦅 Keep Going! 🏕️");
 			break;
+		case "git":
+			p.intro("⚔️  Quest Log - Git 🏰");
+			const gitGuardRes = git.guard();
+			if (!gitGuardRes.ok) {
+				p.cancel(gitGuardRes.err);
+				process.exit(0);
+			}
+			const { autogit } = await p.group(
+				{
+					autogit: () =>
+						p.confirm({ message: "🤔 Auto-sync progress with git?" }),
+				},
+				{
+					onCancel: () => {
+						p.cancel("Operation cancelled.");
+						process.exit(0);
+					},
+				}
+			);
+			// -- Save git toggle for future ----
+			state.set(StateOptions.AutoGit, autogit);
+			if (autogit) {
+				const gitInitRes = await git.init();
+				if (!gitInitRes.ok) {
+					p.cancel(gitInitRes.err);
+					process.exit(0);
+				}
+			}
+			saveState();
+			p.outro("🦅 Git Updated! 🏕️");
+			break;
 		default:
 			break;
 	}

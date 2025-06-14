@@ -19,9 +19,10 @@ export function displayStats() {
 	messages.push(`\n[Current Step Stats]\n`);
 	messages.push(`[Name]: ${currentQuest.name}\n`);
 	messages.push(`[Description]: ${currentQuest.description}\n`);
+	let time: number = 0;
 	if (currentQuest.timeStarted) {
 		const now = new Date();
-		const time = now.getTime() - currentQuest.timeStarted.getTime();
+		time = now.getTime() - currentQuest.timeStarted.getTime();
 		messages.push(`[Time Spent]: ${msToHumanReadable(time)}\n`);
 		let pointsEstimate = pointsToMinutes(currentQuest.points);
 		const timeSpentMinutes = msToMinutes(time);
@@ -47,12 +48,15 @@ export function displayStats() {
 			`[Progress:]\n${progressBar(numQuestsFinished, numQuests)}\n`
 		);
 	}
-	const timeElapsed = state.get(StateOptions.TimeElapsed) as number | undefined;
-	if (timeElapsed) {
-		messages.push(`[Total Project Time]: ${msToHumanReadable(timeElapsed)}\n`);
-	}
+	const timeElapsed =
+		(state.get(StateOptions.TimeElapsed) as number | undefined) || 0;
+	messages.push(
+		`[Total Project Time]: ${msToHumanReadable(timeElapsed + time)}\n`
+	);
 	if (!numQuestsFinished && !timeElapsed) {
-		messages.push(`Complete a Quest Step to see your Quest Stats\n`);
+		messages.push(
+			`Complete a Quest Step to see the rest of your Quest Stats\n`
+		);
 	}
 	return {
 		ok: true,

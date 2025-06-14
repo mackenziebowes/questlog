@@ -19,22 +19,25 @@ ctql is a local-first CLI that helps you:
 
 ---
 
-## How It Works
+## Usage
 
-- `ctql load quest.toml`  
-  Load a structured task list. Clock starts immediately.
+- `npx ctql`
+  Opens an interactive menu where you can select between loading a quest line, finishing a quest, seeing your stats, and turning on/off git sync. Loading a quest line also starts the clock on the first task.
 
 - `ctql done`  
-  Marks the current task complete and starts the next one automatically.
+  Marks the current task complete and starts the next one automatically. If you have git sync enabled, this also commits your current repo (`git add .`) and opens a new branch.
 
 - `ctql stats`  
-  Shows progress, % complete, average task duration, and total elapsed time.
+  Shows current ticket data including time elapsed, questline progress, % complete, average task duration, and total elapsed time for the entire project.
+
+- `ctql git`
+  Allows you to enable/disable git sync.
 
 Each task logs:
 
 - `timeStarted`
 - `timeFinished`
-- Status (`todo`, `in_progress`, `complete`, `dormant`)
+- Status (`pending`, `in_progress`, `finished`)
 
 ---
 
@@ -46,7 +49,7 @@ See Guides/Generating Quests
 
 ## Features
 
-- 📜 Simple, readable data format (TOML or JSON)
+- 📜 Simple, readable data format (TOML)
 - 🕰 Tracks _calendar time_ — not just work hours
 - 📊 Built-in stats for self-awareness and reflection
 - 📁 Scoped to project folders (one quest line per repo)
@@ -67,16 +70,15 @@ See Guides/Generating Quests
 
 - **Runtime**: Bun
 - **CLI Framework**: Clack
-- **Data Format**: TOML + JSON
+- **Data Format**: TOML
 - **Local-First**: No login, no servers, no tracking
 
 ---
 
 ## Roadmap
 
-- ASCII confetti + loot drops on task completion
 - Mid-quest `refactor` to split/merge tasks without losing history
-- Optional sync + public speedrun leaderboards for teams
+- Optional online sync + public speedrun leaderboards for teams / grinders
 
 ---
 
