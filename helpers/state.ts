@@ -10,6 +10,7 @@ export enum StateOptions {
 	AutoGit = "autogit",
 	NumQuestsFinished = "numQuestsFinished",
 	NumQuests = "numQuests",
+	CommitQuests = "CommitQuests",
 }
 
 export const state: CTQLState = new Map<StateOptions, Primitive>();

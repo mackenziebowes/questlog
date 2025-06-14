@@ -141,11 +141,13 @@ async function main() {
 			p.cancel(gitGuardRes.err);
 			process.exit(0);
 		}
-		const { autogit } = await p.group(
+		const { autogit, commitQuests } = await p.group(
 			{
 				autogit: () =>
-					p.confirm({ message: "🤔 Auto-sync progress with git?" }),
+					p.confirm({ message: "🔗 Auto-sync progress with git?" }),
+				commitQuests: () => p.confirm({ message: "📝 Commit your quest log?" }),
 			},
+
 			{
 				onCancel: () => {
 					p.cancel("Operation cancelled.");
@@ -155,6 +157,7 @@ async function main() {
 		);
 		// -- Save git toggle for future ----
 		state.set(StateOptions.AutoGit, autogit);
+		state.set(StateOptions.CommitQuests, commitQuests);
 		if (autogit) {
 			const gitInitRes = await git.init();
 			if (!gitInitRes.ok) {
@@ -208,11 +211,14 @@ if (!subcommand) {
 				p.cancel(gitGuardRes.err);
 				process.exit(0);
 			}
-			const { autogit } = await p.group(
+			const { autogit, commitQuests } = await p.group(
 				{
 					autogit: () =>
-						p.confirm({ message: "🤔 Auto-sync progress with git?" }),
+						p.confirm({ message: "🔗 Auto-sync progress with git?" }),
+					commitQuests: () =>
+						p.confirm({ message: "📝 Commit your quest log?" }),
 				},
+
 				{
 					onCancel: () => {
 						p.cancel("Operation cancelled.");
@@ -222,6 +228,7 @@ if (!subcommand) {
 			);
 			// -- Save git toggle for future ----
 			state.set(StateOptions.AutoGit, autogit);
+			state.set(StateOptions.CommitQuests, commitQuests);
 			if (autogit) {
 				const gitInitRes = await git.init();
 				if (!gitInitRes.ok) {
