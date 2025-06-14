@@ -97,7 +97,7 @@ async function main() {
 		}
 		p.log.success(startQuestRes.data.msg);
 		if (autogit) {
-			const gitCheckoutRes = await git.checkout(startQuestRes.data.questName);
+			const gitCheckoutRes = await git.checkout(startQuestRes.data.name);
 			if (!gitCheckoutRes.ok) {
 				p.cancel(gitCheckoutRes.err);
 				process.exit(0);

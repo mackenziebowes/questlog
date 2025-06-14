@@ -2,6 +2,11 @@
 
 Starting from 0.0.4 because I forgot to start at 0.0.1
 
+## 0.0.6
+
+- Fixed bug in "git sync" feature
+  - I really need to enumerate my function return types. `data: any` is poison and I shot myself in the foot.
+
 ## 0.0.5
 
 - Made "git sync" features do more stuff

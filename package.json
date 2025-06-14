@@ -1,6 +1,6 @@
 {
 	"name": "ctql",
-	"version": "0.0.5",
+	"version": "0.0.6",
 	"description": "Clock Time Quest Log: RPG-style quest tracker for Solo Devs",
 	"type": "module",
 	"module": "index.ts",
