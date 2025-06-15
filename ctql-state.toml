@@ -2,21 +2,12 @@
 # Auto Generated - Do Not Edit
 # CTQL State File
 
-[schedule]
-mode = "default"      # “default”, “deep” or “rapid”
-lastNotifiedBlock = ""  
-
-autogit = true
-FormattedQuests = true
-currentQuestId = 11
-numQuests = 22
-
-[schedule]
-mode = "default"
-lastNotifiedBlock = ""
 autogit = false
+CommitQuests = false
 FormattedQuests = true
-currentQuestId = 10
+currentQuestId = 12
 numQuests = 22
-timeElapsed = 7554711
-numQuestsFinished = 6
+timeElapsed = 1131239
+numQuestsFinished = 5
+figletTitle = "Alligator2"
+figletSubtitle = "Standard"

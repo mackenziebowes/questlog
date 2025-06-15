@@ -9,7 +9,13 @@ export function progressBar(
 	const filled = Math.round(ratio * width);
 	const empty = width - filled;
 
-	const bar = completeChar.repeat(filled) + incompleteChar.repeat(empty);
+	let bar = "";
+	if (filled > 0) {
+		bar += completeChar.repeat(filled);
+	}
+	if (empty > 0) {
+		bar += incompleteChar.repeat(empty);
+	}
 	const percent = Math.round(ratio * 100);
 
 	return `[${bar}] ${percent}%`;

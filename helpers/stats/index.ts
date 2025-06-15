@@ -1,20 +1,21 @@
 import { loadState, state, StateOptions } from "../state";
 import quest from "../quest_handling";
-import { progressBar } from "../progress";
+import { progressBar } from "../decorators/progress";
 import { msToHumanReadable, msToMinutes } from "../time";
 import { pointsToMinutes } from "../points_to_time_goal";
 import fig from "../decorators/figlet";
 import * as p from "@clack/prompts";
+import { exitMsg } from "../decorators/exit_msg";
 
 function isQuestLineComplete() {
 	loadState();
 	const numQuests = (state.get(StateOptions.NumQuests) as number) || undefined;
 	const questsCompleted =
 		(state.get(StateOptions.NumQuestsFinished) as number) || undefined;
-	if (!numQuests || !questsCompleted) {
+	if (!numQuests) {
 		return { ok: false, result: false };
 	}
-	if (numQuests == questsCompleted) {
+	if (numQuests > 0 && numQuests == questsCompleted) {
 		return { ok: true, result: true };
 	}
 	return { ok: true, result: false };
@@ -24,6 +25,9 @@ export function displayStats() {
 	const isComplete = isQuestLineComplete();
 	const messages: string[] = [];
 	let time: number = 0;
+	if (isComplete.ok == false) {
+		exitMsg("State malformed");
+	}
 	if (isComplete.ok == true && isComplete.result == false) {
 		const currentQuestId = state.get(StateOptions.CurrentQuestId) as
 			| number

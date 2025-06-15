@@ -7,7 +7,7 @@ import { NextQuest } from "./nextQuest";
 import { msToHumanReadable, msToMinutes } from "../time";
 import { constructPointsMessage } from "../points_to_time_goal";
 import { QuestStepStatus } from "../types";
-import { progressBar } from "../progress";
+import { progressBar } from "../decorators/progress";
 import type { HelperResponse } from "../types";
 
 export async function FinishQuest(): Promise<HelperResponse> {
@@ -43,8 +43,7 @@ export async function FinishQuest(): Promise<HelperResponse> {
 			);
 			saveState({
 				updates: {
-					[StateOptions.TimeElapsed]:
-						timeElapsed + (totalTimeElapsed || 0).toString(),
+					[StateOptions.TimeElapsed]: timeElapsed + (totalTimeElapsed || 0),
 				},
 			});
 		} else {
@@ -64,10 +63,8 @@ export async function FinishQuest(): Promise<HelperResponse> {
 			updates: {
 				[StateOptions.NumQuestsFinished]:
 					1 +
-					(
-						(state.get(StateOptions.NumQuestsFinished) as number | undefined) ||
-						0
-					).toString(),
+					((state.get(StateOptions.NumQuestsFinished) as number | undefined) ||
+						0),
 			},
 		});
 		const numQuests = state.get(StateOptions.NumQuests) as number | undefined;

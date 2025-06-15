@@ -33,6 +33,18 @@ export type LoadedQuest = DeclaredQuest & {
 
 export type LoadedQuests = Map<number, LoadedQuest>;
 
-export type Primitive = string | Date | boolean | string[] | Date[] | boolean[];
+export type Primitive =
+	| string
+	| number
+	| Date
+	| boolean
+	| string[]
+	| Date[]
+	| boolean[];
 
-export type CTQLState = Map<string, Primitive | TomlPrimitive>;
+export type NestedPrimitive =
+	| Primitive
+	| Record<string, Primitive | TomlPrimitive | TomlPrimitive[]>
+	| Record<string, Primitive | TomlPrimitive | TomlPrimitive[]>[];
+
+export type CTQLState = Map<string, NestedPrimitive | TomlPrimitive>;

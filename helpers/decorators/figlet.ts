@@ -19,13 +19,13 @@ function subtitle(message: string) {
 	console.log();
 }
 
-type TitleFonts =
+export type TitleFonts =
 	| "Delta Corps Priest 1"
 	| "Alligator2"
 	| "ANSI Shadow"
 	| "Cosmike"
 	| "Hollywood";
-type SubTitleFonts =
+export type SubTitleFonts =
 	| "Soft"
 	| "Standard"
 	| "Sub-Zero"
@@ -33,7 +33,7 @@ type SubTitleFonts =
 	| "Cricket"
 	| "Invita";
 
-type CtqlFiglet = TitleFonts | SubTitleFonts;
+export type CtqlFiglet = TitleFonts | SubTitleFonts;
 
 function printFigletText(text: string, font: CtqlFiglet) {
 	console.log(

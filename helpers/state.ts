@@ -1,8 +1,12 @@
 import fs from "node:fs";
 import TOML from "smol-toml";
-import type { CTQLState, HelperResponse, Primitive } from "./types";
+import type {
+	CTQLState,
+	HelperResponse,
+	NestedPrimitive,
+	Primitive,
+} from "./types";
 import { cwd } from "node:process";
-import readline from "node:readline";
 
 export enum StateOptions {
 	FormattedQuests = "FormattedQuests",
@@ -66,14 +70,10 @@ export function loadState(): HelperResponse {
 const StateTomlInit = `
 # Auto Generated - Do Not Edit
 # CTQL State File
-
-[schedule]
-mode = "default"      # “default”, “deep” or “rapid”
-lastNotifiedBlock = ""  
 ` as const;
 
 type saveStateArgs = {
-	updates?: Partial<Record<StateOptions, Primitive>>;
+	updates?: Partial<Record<StateOptions, NestedPrimitive>>;
 	all?: boolean;
 };
 
@@ -81,7 +81,7 @@ export async function saveState(args?: saveStateArgs): Promise<HelperResponse> {
 	try {
 		let statePath = cwd() + "/ctql-state.toml";
 		let saveAll = args?.all;
-		if (saveAll) {
+		if (!saveAll) {
 			let base: Record<string, any> = {};
 			if (fs.existsSync(statePath)) {
 				const raw = fs.readFileSync(statePath, "utf8");
