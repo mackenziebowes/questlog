@@ -84,6 +84,15 @@ class KeystrokeUI {
 		);
 	}
 
+	removeKeyListeners() {
+		if (process.stdin.listenerCount("keypress") > 0) {
+			process.stdin.removeAllListeners("keypress");
+		}
+		if (process.stdin.isTTY) {
+			process.stdin.setRawMode(false);
+		}
+	}
+
 	async handleHomeKeys(key: string) {
 		switch (key) {
 			case "d":
@@ -150,10 +159,9 @@ class KeystrokeUI {
 	}
 
 	async navigateTo(screen: Screen) {
-		console.log({ currentScreen: this.currentScreen });
 		this.pauseRendering();
 		this.currentScreen = screen;
-		console.log({ currentScreen: this.currentScreen });
+		this.enableRawMode();
 		console.clear();
 		fig.title.p("CTQL");
 		switch (screen) {
@@ -167,12 +175,11 @@ class KeystrokeUI {
 					this.startRendering();
 				} else {
 					this.renderWelcomeScreen();
-					this.navigateTo(Screen.HOME);
 				}
 				break;
 			case Screen.OPTIONS:
 				console.log({ loc: "Options" });
-				await this.renderOptionsScreen();
+				this.renderOptionsScreen();
 				this.startRendering();
 				break;
 			// interactive/dynamic screens (no rerenders)
@@ -191,7 +198,6 @@ class KeystrokeUI {
 			case Screen.START:
 				console.log({ loc: "start" });
 				await this.renderStartScreen();
-				this.navigateTo(Screen.HOME);
 				break;
 		}
 	}
@@ -499,7 +505,8 @@ class KeystrokeUI {
 
 	async renderStartScreen() {
 		p.log.step("🧙‍♂️ Starting your quest line...");
-
+		this.removeKeyListeners();
+		this.disableRawMode();
 		// Check if quest.toml exists, if not, help create it
 		const questLocation = cwd() + "/quest.toml";
 		if (!fs.existsSync(questLocation)) {
@@ -761,6 +768,22 @@ class KeystrokeUI {
 		this.renderHomeScreen();
 	}
 
+	disableRawMode() {
+		if (process.stdin.isTTY) {
+			process.stdin.setRawMode(false);
+			process.stdin.pause();
+		}
+	}
+
+	enableRawMode() {
+		this.setupKeyListeners();
+		if (process.stdin.isTTY) {
+			process.stdin.resume();
+			readline.emitKeypressEvents(process.stdin);
+			process.stdin.setRawMode(true);
+		}
+	}
+
 	isQuestlineInitialized(): boolean {
 		const questLocation = cwd() + "/quest.toml";
 		const stateLocation = cwd() + "/ctql-state.toml";
@@ -791,16 +814,8 @@ class KeystrokeUI {
 	}
 
 	resumeRendering() {
-		this.setupKeyListeners();
 		if (this.isPaused) {
-			if (process.stdin.isTTY) {
-				// bring stdin back online…
-				process.stdin.resume();
-				// re-emit keypress events…
-				readline.emitKeypressEvents(process.stdin);
-				// raw mode so we see each key immediately
-				process.stdin.setRawMode(true);
-			}
+			this.enableRawMode();
 			this.isPaused = false;
 			this.startRendering();
 		}
