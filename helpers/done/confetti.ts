@@ -1,5 +1,5 @@
 import * as p from "@clack/prompts";
-
+import fig from "../decorators/figlet";
 interface ConfettiArgs {
 	duration?: number;
 	width?: number;
@@ -44,6 +44,9 @@ export async function confetti(args: ConfettiArgs) {
 
 	return new Promise<void>((resolve) => {
 		const interval = setInterval(() => {
+			fig.title.p("CTQL");
+			fig.subtitle.p("quest");
+			fig.subtitle.p("complete!");
 			// Clear screen and move to top-left
 			process.stdout.write("\x1Bc");
 

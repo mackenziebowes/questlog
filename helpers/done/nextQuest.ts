@@ -22,6 +22,11 @@ export async function NextQuest(
 			throw new Error("❌ No Quest to Start!");
 		}
 		state.set(StateOptions.CurrentQuestId, nextQuestId);
+		saveState({
+			updates: {
+				[StateOptions.CurrentQuestId]: nextQuestId.toString(),
+			},
+		});
 		const now = new Date();
 		nextQuest.status = QuestStepStatus.STARTED;
 		nextQuest.timeStarted = new TomlDate(now);

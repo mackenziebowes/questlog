@@ -41,6 +41,12 @@ export async function FinishQuest(): Promise<HelperResponse> {
 				StateOptions.TimeElapsed,
 				timeElapsed + (totalTimeElapsed || 0)
 			);
+			saveState({
+				updates: {
+					[StateOptions.TimeElapsed]:
+						timeElapsed + (totalTimeElapsed || 0).toString(),
+				},
+			});
 		} else {
 			timeMsg = "⚠️ Quest start time is not available.";
 		}
@@ -54,6 +60,16 @@ export async function FinishQuest(): Promise<HelperResponse> {
 			1 +
 				((state.get(StateOptions.NumQuestsFinished) as number | undefined) || 0)
 		);
+		saveState({
+			updates: {
+				[StateOptions.NumQuestsFinished]:
+					1 +
+					(
+						(state.get(StateOptions.NumQuestsFinished) as number | undefined) ||
+						0
+					).toString(),
+			},
+		});
 		const numQuests = state.get(StateOptions.NumQuests) as number | undefined;
 		const numFinished = state.get(StateOptions.NumQuestsFinished) as
 			| number

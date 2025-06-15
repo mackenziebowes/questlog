@@ -176,7 +176,6 @@ function findFirstStep(quests: LoadedQuests) {
 	const questCount = quests.size;
 	for (let i = 1; i <= questCount; i++) {
 		const quest = quests.get(i);
-		console.log({ quest });
 		if (quest && quest.status === QuestStepStatus.PENDING) {
 			return quest;
 		}

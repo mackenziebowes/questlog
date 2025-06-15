@@ -3,7 +3,7 @@ import { QuestStepStatus } from "../types";
 import { TomlDate } from "smol-toml";
 import { pointsToMinutes } from "../points_to_time_goal";
 import quest from "../quest_handling";
-import { state, StateOptions } from "../state";
+import { saveState, state, StateOptions } from "../state";
 
 export function startQuest(
 	loadedQuests: Map<number, LoadedQuest>
@@ -19,6 +19,12 @@ export function startQuest(
 		loadedQuests.set(nextQuest.id, nextQuest);
 		state.set(StateOptions.CurrentQuestId, nextQuest.id);
 		state.set(StateOptions.NumQuests, loadedQuests.size);
+		saveState({
+			updates: {
+				[StateOptions.CurrentQuestId]: nextQuest.id.toString(),
+				[StateOptions.NumQuests]: loadedQuests.size.toString(),
+			},
+		});
 		return {
 			ok: true,
 			data: {

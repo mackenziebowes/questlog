@@ -2,9 +2,21 @@
 # Auto Generated - Do Not Edit
 # CTQL State File
 
+[schedule]
+mode = "default"      # “default”, “deep” or “rapid”
+lastNotifiedBlock = ""  
+
 autogit = true
 FormattedQuests = true
-currentQuestId = 6
+currentQuestId = 11
 numQuests = 22
-timeElapsed = 1119057
-numQuestsFinished = 5
+
+[schedule]
+mode = "default"
+lastNotifiedBlock = ""
+autogit = false
+FormattedQuests = true
+currentQuestId = 10
+numQuests = 22
+timeElapsed = 7554711
+numQuestsFinished = 6

@@ -2,6 +2,7 @@ import fs from "node:fs";
 import TOML from "smol-toml";
 import type { CTQLState, HelperResponse, Primitive } from "./types";
 import { cwd } from "node:process";
+import readline from "node:readline";
 
 export enum StateOptions {
 	FormattedQuests = "FormattedQuests",
@@ -11,6 +12,9 @@ export enum StateOptions {
 	NumQuestsFinished = "numQuestsFinished",
 	NumQuests = "numQuests",
 	CommitQuests = "CommitQuests",
+	FigletTitle = "figletTitle",
+	FigletSubtitle = "figletSubtitle",
+	Schedule = "schedule",
 }
 
 export const state: CTQLState = new Map<StateOptions, Primitive>();
@@ -62,28 +66,61 @@ export function loadState(): HelperResponse {
 const StateTomlInit = `
 # Auto Generated - Do Not Edit
 # CTQL State File
+
+[schedule]
+mode = "default"      # “default”, “deep” or “rapid”
+lastNotifiedBlock = ""  
 ` as const;
 
-export function saveState(): HelperResponse {
+type saveStateArgs = {
+	updates?: Partial<Record<StateOptions, Primitive>>;
+	all?: boolean;
+};
+
+export async function saveState(args?: saveStateArgs): Promise<HelperResponse> {
 	try {
-		let state_loc = cwd() + "/ctql-state.toml";
-		if (!fs.existsSync(state_loc)) {
-			// -- Initialize ------------
-			fs.writeFileSync(state_loc, StateTomlInit, "utf8");
+		let statePath = cwd() + "/ctql-state.toml";
+		let saveAll = args?.all;
+		if (saveAll) {
+			let base: Record<string, any> = {};
+			if (fs.existsSync(statePath)) {
+				const raw = fs.readFileSync(statePath, "utf8");
+				base = TOML.parse(raw) as Record<string, any>;
+			} else {
+				fs.writeFileSync(statePath, StateTomlInit, "utf8");
+				base = TOML.parse(StateTomlInit) as Record<string, any>;
+			}
+			// merge in updates
+			const merged = args
+				? deepMerge(base, args.updates as Record<string, any>)
+				: base;
+			// stringify and atomic write
+			const tomlString = TOML.stringify(merged);
+			const full = `${StateTomlInit}\n${tomlString}`;
+
+			const tmp = statePath + ".tmp";
+			fs.writeFileSync(tmp, full, "utf8");
+			fs.renameSync(tmp, statePath);
+
+			return { ok: true, data: "" };
+		} else {
+			if (!fs.existsSync(statePath)) {
+				// -- Initialize ------------
+				fs.writeFileSync(statePath, StateTomlInit, "utf8");
+				return {
+					ok: true,
+					data: "",
+				};
+			}
+			const stateObject = Object.fromEntries(state.entries());
+			const tomlString = TOML.stringify(stateObject);
+			const stateContents = `${StateTomlInit}\n${tomlString}`;
+			fs.writeFileSync(statePath, stateContents, "utf8");
 			return {
 				ok: true,
 				data: "",
 			};
 		}
-		// -- Save ------------
-		const stateObject = Object.fromEntries(state.entries());
-		const tomlString = TOML.stringify(stateObject);
-		const stateContents = `${StateTomlInit}\n${tomlString}`;
-		fs.writeFileSync(state_loc, stateContents, "utf8");
-		return {
-			ok: true,
-			data: "",
-		};
 	} catch (err) {
 		if (err instanceof Error) {
 			return {
@@ -97,4 +134,30 @@ export function saveState(): HelperResponse {
 			};
 		}
 	}
+}
+
+export function deepMerge<T extends Record<string, any>>(
+	target: T,
+	updates: Partial<T>
+): T {
+	const output = { ...target };
+	for (const key of Object.keys(updates)) {
+		const updVal = updates[key] as any;
+		const tgtVal = (target as any)[key];
+		if (
+			typeof tgtVal === "object" &&
+			tgtVal !== null &&
+			typeof updVal === "object" &&
+			updVal !== null &&
+			!Array.isArray(tgtVal) &&
+			!Array.isArray(updVal)
+		) {
+			// both are non-array objects → recurse
+			(output as any)[key] = deepMerge(tgtVal, updVal);
+		} else {
+			// otherwise, overwrite
+			(output as any)[key] = updVal;
+		}
+	}
+	return output;
 }
