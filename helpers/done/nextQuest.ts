@@ -31,7 +31,7 @@ export async function NextQuest(
 		nextQuest.status = QuestStepStatus.STARTED;
 		nextQuest.timeStarted = new TomlDate(now);
 		const autogit = state.get(StateOptions.AutoGit);
-		if (autogit) {
+		if (autogit === true) {
 			git.guard();
 			git.checkout(nextQuest.name);
 		}

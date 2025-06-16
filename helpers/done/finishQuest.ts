@@ -9,9 +9,11 @@ import { constructPointsMessage } from "../points_to_time_goal";
 import { QuestStepStatus } from "../types";
 import { progressBar } from "../decorators/progress";
 import type { HelperResponse } from "../types";
+import { emitWarning } from "node:process";
 
 export async function FinishQuest(): Promise<HelperResponse> {
 	try {
+		// -- Defensive Validation ---
 		const currentQuestId = state.get(StateOptions.CurrentQuestId) as
 			| number
 			| undefined;
@@ -26,11 +28,20 @@ export async function FinishQuest(): Promise<HelperResponse> {
 		currentQuest.timeFinished = new TomlDate(now);
 		currentQuest.status = QuestStepStatus.FINISHED;
 		let timeMsg = "";
-		let totalTimeElapsed = state.get(StateOptions.TimeElapsed) as
-			| number
-			| undefined;
+		// -- More Defensive Validation ---
+		let totalTimeElapsed = state.get(StateOptions.TimeElapsed);
+		if (totalTimeElapsed === undefined || totalTimeElapsed === null) {
+			totalTimeElapsed = 0;
+		} else if (typeof totalTimeElapsed !== "number") {
+			const parsedValue = parseInt(totalTimeElapsed as string, 10);
+			if (isNaN(parsedValue)) {
+				totalTimeElapsed = 0;
+			} else {
+				totalTimeElapsed = parsedValue;
+			}
+		}
 		let pointsMsg = "";
-		if (currentQuest.timeStarted) {
+		if (currentQuest.timeStarted && currentQuest.timeStarted instanceof Date) {
 			const timeElapsed =
 				now.getTime() -
 				new Date(currentQuest.timeStarted.toISOString()).getTime();
@@ -54,34 +65,50 @@ export async function FinishQuest(): Promise<HelperResponse> {
 			git.commit(currentQuest.name);
 		}
 		quest.quests.set(currentQuest.id, currentQuest);
-		state.set(
-			StateOptions.NumQuestsFinished,
-			1 +
-				((state.get(StateOptions.NumQuestsFinished) as number | undefined) || 0)
-		);
+		// Guard before increment quests complete counter ---
+		let currentNumQuestsFinished = state.get(StateOptions.NumQuestsFinished);
+		if (typeof currentNumQuestsFinished !== "number") {
+			if (typeof currentNumQuestsFinished !== "string") {
+				state.set(StateOptions.NumQuestsFinished, 0);
+				currentNumQuestsFinished = 0;
+			} else {
+				currentNumQuestsFinished = parseInt(currentNumQuestsFinished);
+				state.set(StateOptions.NumQuestsFinished, currentNumQuestsFinished);
+			}
+		}
+		// -- The Big Increment ----
+		currentNumQuestsFinished++;
+		state.set(StateOptions.NumQuestsFinished, currentNumQuestsFinished);
 		saveState({
 			updates: {
-				[StateOptions.NumQuestsFinished]:
-					1 +
-					((state.get(StateOptions.NumQuestsFinished) as number | undefined) ||
-						0),
+				[StateOptions.NumQuestsFinished]: currentNumQuestsFinished,
 			},
 		});
-		const numQuests = state.get(StateOptions.NumQuests) as number | undefined;
-		const numFinished = state.get(StateOptions.NumQuestsFinished) as
-			| number
-			| undefined;
-		let progressMsg = "";
-		if (numQuests && numFinished) {
-			progressMsg = progressBar(numFinished, numQuests);
+
+		// -- UI ----
+		let numQuests = state.get(StateOptions.NumQuests);
+		// -- UI Defense --
+		if (typeof numQuests !== "number") {
+			if (typeof numQuests !== "string") {
+				state.set(StateOptions.NumQuests, 0);
+				numQuests = 0;
+			} else {
+				numQuests = parseInt(numQuests);
+				state.set(StateOptions.NumQuests, numQuests);
+			}
 		}
+		// -- Display Progress --
+		let progressMsg = "";
+		if (numQuests && currentNumQuestsFinished) {
+			progressMsg = progressBar(currentNumQuestsFinished, numQuests);
+		}
+
 		// -- Questline May Be Complete! ---
 		if (quest.quests.has(currentQuestId + 1)) {
 			const preparedMessages = [`✨ [Complete]: ${currentQuest.name}`, timeMsg];
 			if (pointsMsg.length > 0) {
 				preparedMessages.push(pointsMsg);
 			}
-
 			await confetti({
 				duration: 2000,
 				messages: preparedMessages,
