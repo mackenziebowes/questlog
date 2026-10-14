@@ -24,7 +24,7 @@ export async function NextQuest(
 		state.set(StateOptions.CurrentQuestId, nextQuestId);
 		saveState({
 			updates: {
-				[StateOptions.CurrentQuestId]: nextQuestId.toString(),
+				[StateOptions.CurrentQuestId]: nextQuestId,
 			},
 		});
 		const now = new Date();

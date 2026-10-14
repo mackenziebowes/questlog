@@ -70,7 +70,10 @@ export function displayStats() {
 		| undefined;
 	if (numQuestsFinished) {
 		messages.push(
-			`[Progress:]\n${progressBar(numQuestsFinished, numQuests)}\n`
+			`[Progress:]\t${numQuestsFinished}/${numQuests}\n${progressBar(
+				numQuestsFinished,
+				numQuests
+			)}\n`
 		);
 	}
 	const timeElapsed =
